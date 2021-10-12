@@ -1,0 +1,43 @@
+version: 1.0
+component: deployment
+runAs: ocarun
+env:
+  variables:
+    clusterId: "${clusterId}"
+    OCI_CLI_AUTH: "instance_principal"
+    chartVersion: "${chartVersion}"
+    HELM_EXPERIMENTAL_OCI: "1"
+files:
+- source: /
+  destination: /tmp/helmDemo
+steps:
+  - stepType: Command
+    name: Install pre-req
+    command: ./prereq-script.sh
+    timeoutInSeconds: 600
+    runAs: root
+  - stepType: Command
+    name: Pull chart from OCIR
+    command: helm pull -d /tmp/helmDemo oci://iad.ocir.io/idjrnzlldnlw/mychart --version ${chartVersion} --untar
+    timeoutInSeconds: 60
+    runAs: root
+  - stepType: Command
+    name: Install myChart
+    command: helm install mychart /tmp/helmDemo/mychart
+    timeoutInSeconds: 60
+  - stepType: Command
+    name: Verify Chart Has Been Released
+    command: helm list
+    timeoutInSeconds: 60
+  - stepType: Command
+    name: Verify Chart Has Been Released from Kubectl side
+    command: kubectl get configmap
+    timeoutInSeconds: 60
+  - stepType: Command
+    name: Uninstall the Release
+    command: helm uninstall mychart
+    timeoutInSeconds: 60
+  - stepType: Command
+    name: Verify the Helm release has been uninstalled
+    command: helm list
+    timeoutInSeconds: 60
