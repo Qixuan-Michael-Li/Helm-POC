@@ -1,9 +1,8 @@
 # Helm-POC
 This repository stores the helper scripts used for Helm POC project.
 
-Instructions for using the helper scripts on Confluence (for OCI Internal Users Only): https://confluence.oci.oraclecorp.com/pages/viewpage.action?spaceKey=~qixuli&postingDay=2021%2F10%2F4&title=Using+Instance+Group+Deployment+and+Helm+to+Deploy+to+OKE+Clusters+with+a+Private+Endpoint
+Instructions for using the helper scripts:
 
-Instructions:
 1. Create an instance and set up Internet access and sudo permission for run commnad user.
 
 First, we need to create an instance in the same VCN as the private OKE cluster. This instance will serve as the jump host to the private OKE cluster. When creating the instance, we should use the following cloud-init file to set up sudo permission for the run command plugin user. The run commnad plugin user will be used later by the instance group deployment pipeline to run commands to set up OCI CLI, kubectl, and Helm. The cloud-init.yaml file required is:
